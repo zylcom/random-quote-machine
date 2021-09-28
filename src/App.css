@@ -19,7 +19,7 @@
   flex-direction: column;
 }
 
-.change-color{
+.change-color {
   width: 550px;
 }
 
@@ -95,4 +95,32 @@
 .fa-tumblr {
   /* text-align: center; */
   width: 16px;
+}
+
+@media screen and (max-width: 500px) {
+  #quote-box,
+  .change-color {
+    width: 95%;
+    padding: 10px 20px;
+  }
+
+  .quote-text {
+    width: 100%;
+  }
+
+  .btns {
+    flex-direction: column;
+  }
+
+  .links {
+    display: flex;
+    justify-content: space-around;
+    width: 108px;
+  }
+
+  #tweet-quote,
+  #tumblr-quote {
+    margin-top: 20px;
+    margin-right: 0;
+  }
 }

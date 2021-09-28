@@ -4,10 +4,11 @@ import "./App.css";
 function App() {
   const [quotes, setQuotes] = useState([]);
   const [currentQuote, setCurrentQuote] = useState(
-    "I attribute my success to this: I never gave or took any excuse."
+    "Knowledge is better than wealth, knowledge will protect you, while wealth you must protect."
   );
-  const [currentAuthor, setCurrentAuthor] = useState("Wayne Gretzky");
+  const [currentAuthor, setCurrentAuthor] = useState("Utsman Bin Affan");
   const [color, setColor] = useState("27ae60");
+  const [display, setDisplay] = useState("none");
   let [progress, setProgress] = useState(100);
   const colors = [
     "#16a085",
@@ -36,23 +37,23 @@ function App() {
     }
   };
 
-  const getRandomQuote = () => {
-    return quotes[Math.floor(Math.random() * quotes.length)];
-  };
+  useEffect(() => {
+    getQuotes();
+  }, []);
 
   const changeColor = () => {
     setColor(colors[Math.floor(Math.random() * colors.length)]);
   };
 
-  const getQuote = () => {
+  const getRandomQuote = () => {
     const transitionText = setInterval(() => {
       setProgress((progress -= 10));
       console.log(progress);
       if (progress === 10) {
         clearInterval(transitionText);
         setTimeout(() => {
-          setCurrentQuote(getRandomQuote().quote);
-          setCurrentAuthor(getRandomQuote().author);
+          setCurrentQuote(quotes[Math.floor(Math.random() * quotes.length)].quote);
+          setCurrentAuthor(quotes[Math.floor(Math.random() * quotes.length)].author);
           changeColor();
           setProgress(100);
         }, 500);
@@ -63,29 +64,19 @@ function App() {
     }, 50);
   };
 
-  // const changeColor = () => {
-  //   const updateColor = setInterval(() => {
-  //     setProgress((progress -= 10));
-  //     console.log(progress);
-  //     if (progress === 10) {
-  //       clearInterval(updateColor);
-  //       setTimeout(() => {
-  //         setProgress(100);
-  //       }, 500);
-  //     }
-  //     if (progress <= 0) {
-  //       clearInterval(updateColor);
-  //     }
-  //   }, 100);
-  // };
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(`"${currentQuote}" - ${currentAuthor}`);
+    setDisplay("block");
+    setTimeout(() => {
+      setDisplay("none");
+    }, 3000);
+  };
 
-  useEffect(() => {
-    getQuotes();
-  }, []);
-
-  // console.log(colors[0]);
   return (
     <div className="App" style={{ background: color, transition: "background 1.2s" }}>
+      <div className="alert alert-success" role="alert" style={{ display }}>
+        <i className="fa fa-check" aria-hidden="true"></i> Copied to clipboard
+      </div>
       <div className="change-color">
         <button
           className="btn float-end"
@@ -93,6 +84,13 @@ function App() {
           onClick={changeColor}
         >
           <i className="fa fa-refresh" aria-hidden="true" title="Change color"></i>
+        </button>
+        <button
+          className="btn float-end copy"
+          style={{ background: "transparent" }}
+          onClick={copyToClipboard}
+        >
+          <i className="fa fa-clipboard" aria-hidden="true" title="Copy to clipboard"></i>
         </button>
       </div>
       <div id="quote-box">
@@ -114,11 +112,11 @@ function App() {
             id="new-quote"
             className="btn"
             style={{ background: color, transition: "background 1.2s" }}
-            onClick={getQuote}
+            onClick={getRandomQuote}
           >
             New Quote
           </button>
-          <div>
+          <div className="links">
             <a
               href={`https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text="${encodeURIComponent(
                 currentQuote
@@ -150,7 +148,7 @@ function App() {
         </div>
       </div>
       <div className="footer mt-3">
-        <span className="text-white">Created by Sabil</span>
+        <span className="text-white">Created by Sabil &bull; Built with ReactJs</span>
       </div>
     </div>
   );
